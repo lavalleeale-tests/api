@@ -20,7 +20,7 @@ app.use(
   app.use('/auth', authController);
   app.use('/ssh', sshController);
   app.use('/web', webController);
-  require('./chatappController')(app, server);
+  require('./chatappController')(app, httpsServer);
   
 
 process.on('SIGINT', function() {
