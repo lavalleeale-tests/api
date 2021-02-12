@@ -23,4 +23,4 @@ process.on('SIGINT', function() {
   server.close();
 });
 
-server.listen(__dirname+"/../"+"api.sock")
+server.listen(8080)
