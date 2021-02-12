@@ -36,7 +36,7 @@ router.post('/renewClient', function (req, res) {
    res.end(JSON.stringify({crt:hostCert.toString("openssh")}));
 });
 function auth(key) {
-   data = fs.readFileSync( __dirname + "/../" + "tokens.json", 'utf8');
+   data = fs.readFileSync( __dirname + "/../" + "keys/tokens.json", 'utf8');
    tokens = JSON.parse(data);
    for (i = 0; i < tokens.length; i++) {
       if (tokens[i]==tokens) {

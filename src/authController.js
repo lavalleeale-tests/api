@@ -10,7 +10,7 @@ router.get('/listUsers', function (req, res) {
    } else {
      return res.status(401).send("Incorrect Auth");
    }
-    fs.readFile( __dirname + "/" + "tokens.json", 'utf8', function (err, data) {
+    fs.readFile( __dirname + "/../" + "keys/tokens.json", 'utf8', function (err, data) {
        return res.end( data );
     });
  })
@@ -22,7 +22,7 @@ router.get('/listUsers', function (req, res) {
     token = crypto.randomBytes(16).toString("base64")
     console.log(token)
     tokens[tokens.length] = token
-    fs.writeFileSync(__dirname + "/../" + "tokens.json", tokens)
+    fs.writeFileSync(__dirname + "/../" + "keys/tokens.json", tokens)
     return res.end(token)
     });
  module.exports = router;
