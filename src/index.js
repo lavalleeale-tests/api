@@ -1,8 +1,12 @@
 const express = require('express');
 const fs = require("fs");
 const http = require('http')
+const http = require('https')
 const app = express();
-const server = http.createServer(app);
+var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
+var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
+var credentials = {key: privateKey, cert: certificate};
+var httpsServer = https.createServer(credentials, app);
 const authController = require('./authController');
 const sshController = require('./sshController');
 const webController = require('./webController');
@@ -23,4 +27,4 @@ process.on('SIGINT', function() {
   server.close();
 });
 
-server.listen(8080)
+server.listen(443)
