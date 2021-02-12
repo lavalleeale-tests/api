@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require("fs");
 const http = require('http')
-const http = require('https')
+const https = require('https')
 const app = express();
 var privateKey  = fs.readFileSync('sslcert/server.key', 'utf8');
 var certificate = fs.readFileSync('sslcert/server.crt', 'utf8');
@@ -24,7 +24,7 @@ app.use(
   
 
 process.on('SIGINT', function() {
-  server.close();
+  httpsServer.close();
 });
 
-server.listen(443)
+httpsServer.listen(443)
