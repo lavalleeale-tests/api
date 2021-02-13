@@ -13,10 +13,16 @@ module.exports = function (app, server) {
     io.on('connection', socket => {
         socket.on('sendMessage', (data) => {
             if (data.split(" ")[1] === "/w") {
+                if (data.split(" ").length<3) {
+                    io.to(socket.id).emit("update", `Incorrect Arguemnt Count`)
+                }
                 var userTo = Object.keys(allClients).find(key => allClients[key] === data.split(" ")[2])
+                if (!userTo) {
+                    io.to(socket.id).emit("update", `User ${data.split(" ")[2]} not found, maybe a spelling mistake?`)
+                }
                 var userFrom = allClients[socket.id]
-                io.to(userTo).emit("update", `Whisper from ${userFrom}: ${data.split(" ")[3]}`)
-                io.to(socket.id).emit("update", `Whisper to ${allClients[userTo]}: ${data.split(" ")[3]}`)
+                io.to(userTo).emit("update", `Whisper from ${userFrom}: ${data.split(" ").slice(2)}`)
+                io.to(socket.id).emit("update", `Whisper to ${allClients[userTo]}: ${data.split(" ").slice(2)}`)
             } else {
                 console.log(`Got message: ${data}`)
                 io.to(Array.from(socket.rooms)[1]).emit("update", data)
