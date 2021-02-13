@@ -1,7 +1,7 @@
 const fs = require('fs')
 var tokens;
 
-fs.watch(buttonPressesLogFile, (event, filename) => {
+fs.watch(__dirname + "/../" + "keys/tokens.json", (event, filename) => {
    if (filename) {
      tokens=JSON.parse(fs.readFileSync( __dirname + "/../" + "keys/tokens.json", 'utf8'))
    }
