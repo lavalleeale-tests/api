@@ -13,12 +13,12 @@ module.exports = function (app, server) {
     io.on('connection', socket => {
         socket.on('sendMessage', (data) => {
             if (data.split(" ")[1] === "/w") {
-                if (data.split(" ").length<3) {
-                    return io.to(socket.id).emit("update", `Incorrect Arguemnt Count`)
+                if (data.split(" ").length < 3) {
+                    return io.to(socket.id).emit("update", `Incorrect Arguemnt Count\n`)
                 }
                 var userTo = Object.keys(allClients).find(key => allClients[key] === data.split(" ")[2])
                 if (!userTo) {
-                    return io.to(socket.id).emit("update", `User ${data.split(" ")[2]} not found, maybe a spelling mistake?`)
+                    return io.to(socket.id).emit("update", `User ${data.split(" ")[2]} not found, maybe a spelling mistake?\n`)
                 }
                 var userFrom = allClients[socket.id]
                 io.to(userTo).emit("update", `Whisper from ${userFrom}: ${data.split(" ").slice(3).join(" ")}`)
