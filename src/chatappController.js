@@ -18,7 +18,7 @@ module.exports = function (app, server) {
                 }
                 var userTo = Object.keys(allClients).find(key => allClients[key] === data.split(" ")[2])
                 if (!userTo) {
-                    return io.to(socket.id).emit("update", `User ${data.split(" ")[2]} not found, maybe a spelling mistake?\n`)
+                    return io.to(socket.id).emit("update", `User ${data.split(" ")[2].replace("\n","")} not found, maybe a spelling mistake?\n`)
                 }
                 var userFrom = allClients[socket.id]
                 io.to(userTo).emit("update", `Whisper from ${userFrom}: ${data.split(" ").slice(3).join(" ")}`)
