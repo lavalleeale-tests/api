@@ -1,5 +1,5 @@
 const fs = require('fs')
-var tokens;
+var tokens = JSON.parse(fs.readFileSync( __dirname + "/../" + "keys/tokens.json", 'utf8'));
 
 fs.watch(__dirname + "/../" + "keys/tokens.json", (event, filename) => {
    if (filename) {
