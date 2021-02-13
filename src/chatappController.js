@@ -14,7 +14,7 @@ module.exports = function (app, server) {
         socket.on('sendMessage', (data) => {
             if (data.split(" ")[1].replace("\n", "") === "/w") {
                 if (data.split(" ").length < 4) {
-                    return io.to(socket.id).emit("update", `Incorrect Arguemnt Count\n`)
+                    return io.to(socket.id).emit("update", `Incorrect Argument Count\n`)
                 }
                 var userTo = Object.keys(allClients).find(key => allClients[key] === data.split(" ")[2])
                 if (!userTo) {
