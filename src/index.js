@@ -10,6 +10,17 @@ var httpsServer = https.createServer(credentials, app);
 const authController = require('./authController');
 const sshController = require('./sshController');
 const webController = require('./webController');
+const rateLimit = require("express-rate-limit");
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100,
+  message: "Too many requests"
+});
+
+app.use("/auth/", apiLimiter);
+app.use("/ssh/", apiLimiter);
+app.use("/web/", apiLimiter);
 
 app.use(
   express.urlencoded({
