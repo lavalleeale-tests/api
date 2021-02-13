@@ -14,26 +14,44 @@ module.exports = function (app, server) {
     io.on('connection', socket => {
         socket.on('sendMessage', (data) => {
             console.log(`Got message: ${data}`)
-            io.emit("update", data)
+            io.to(Array.from(socket.rooms)[0]).emit("update", data)
         });
         socket.on('newUser', (data) => {
+            socket.leaveAll()
             online++
-            allClients[socket] = data
-            console.log(`${data} has joined`)
-            socket.emit("users", JSON.stringify(Object.values(allClients)))
-            io.emit("newUser", data)
+            parsedData=JSON.parse(data)
+            allClients[socket.id] = parsedData.username
+            console.log(`${parsedData.username} has joined with room ${parsedData.room}`)
+            socket.join(parsedData.room)
+            io.to(Array.from(socket.rooms)[0]).emit("newUser", parsedData.username)
         });
         socket.on('disconnect', () => {
             online--
-            console.log(`${allClients[socket]} has left`)
-            io.emit("delUser", allClients[socket])
-            delete (allClients[socket])
+            console.log(`${allClients[socket.id]} has left`)
+            io.to(Array.from(socket.rooms)[0]).emit("delUser", allClients[socket.id])
+            delete (allClients[socket.id])
         });
         socket.on('changeName', (data) => {
             parsedData = JSON.parse(data)
             console.log(`${parsedData.oldName} has changed their name to ${parsedData.newName}`)
-            allClients[socket] = parsedData.newName
-            io.emit("changeName", data)
+            allClients[socket.id] = parsedData.newName
+            io.to(Array.from(socket.rooms)[0]).emit("changeName", data)
+        });
+        socket.on('changeRoom', (data) => {
+            console.log(`${allClients[socket.id]} has changed their room to ${data}`)
+            io.to(Array.from(socket.rooms)[0]).emit("delUser", allClients[socket.id])
+            socket.leaveAll()
+            socket.join(data)
+            io.to(Array.from(socket.rooms)[0]).emit("newUser", allClients[socket.id])
+        });
+        socket.on('changeInfo', (data) => {
+            parsedData=JSON.parse(data)
+            console.log(`${allClients[socket.id]} has changed their room to ${parsedData.room} and name to ${parsedData.username}`)
+            io.to(Array.from(socket.rooms)[0]).emit("delUser", allClients[socket.id])
+            socket.leaveAll()
+            socket.join(parsedData.room)
+            allClients[socket.id] = parsedData.username
+            io.to(Array.from(socket.rooms)[0]).emit("newUser", allClients[socket.id])
         });
     });
 }
