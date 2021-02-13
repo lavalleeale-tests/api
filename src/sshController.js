@@ -4,10 +4,11 @@ var sshpk = require("sshpk");
 var auth = require('./auth.js');
 var router = express.Router();
 var authenticated;
+var pubKey = sshpk.parseKey(fs.readFileSync( __dirname + "/../" + "keys/sshca_key.pub", 'utf8'));
+var privKey = sshpk.parsePrivateKey(fs.readFileSync( __dirname + "/../" + "keys/sshca_key", 'utf8'));
+var caCert = sshpk.parseCertificate(fs.readFileSync( __dirname + "/../" + "keys/alexCA.pem", 'utf8'), "pem");
 
 router.post('/renewClient', function (req, res) {
-   pubKey = sshpk.parseKey(fs.readFileSync( __dirname + "/../" + "keys/sshca_key.pub", 'utf8'));
-   privKey = sshpk.parsePrivateKey(fs.readFileSync( __dirname + "/../" + "keys/sshca_key", 'utf8'));
    certificate = sshpk.parseCertificate(req.body.crt, "openssh");
    if (certificate.isExpired()) {
       return res.status(401).send("Expired Key");
@@ -28,21 +29,9 @@ router.post('/renewClient', function (req, res) {
    }
    hostKey = sshpk.parseKey(req.body.pubkey);
    hostName = req.body.hostname
-   privKey = sshpk.parsePrivateKey(fs.readFileSync( __dirname + "/../" + "keys/sshca_key", 'utf8'));
-   caCert = sshpk.parseCertificate(fs.readFileSync( __dirname + "/../" + "keys/alexCA.pem", 'utf8'), "pem");
    console.log(caCert)
    hostCert = sshpk.createCertificate(sshpk.identityForHost(hostName+".local"), hostKey, caCert.subjects[0], privKey);
    hostCert.signWith(privKey)
    res.end(JSON.stringify({crt:hostCert.toString("openssh")}));
 });
-function auth(key) {
-   data = fs.readFileSync( __dirname + "/../" + "keys/tokens.json", 'utf8');
-   tokens = JSON.parse(data);
-   for (i = 0; i < tokens.length; i++) {
-      if (tokens[i]==tokens) {
-         return true;
-      }
-   }
-   return false;
-}
  module.exports = router;

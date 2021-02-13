@@ -5,14 +5,14 @@ var auth = require('./auth.js');
 var router = express.Router();
 var pki = forge.pki;
 var pkcs12 = forge.pkcs12;
+var caCertPem = fs.readFileSync(__dirname + "/../" + "keys/alexCA.pem");
+var privKey = fs.readFileSync(__dirname + "/../" + "keys/alexCA.key");
 
  router.post('/sign', function (req, res) {
     if (auth.authToken(req.header("api_key"))) {
     } else {
       return res.status(401).send("Incorrect Auth");
     }
-    privKey = fs.readFileSync(__dirname + "/../" + "keys/alexCA.key");
-    caCertPem = fs.readFileSync(__dirname + "/../" + "keys/alexCA.pem");
     caCert = pki.certificateFromPem(caCertPem);
     key = pki.privateKeyFromPem(privKey);
     keys = pki.rsa.generateKeyPair(2048);
@@ -52,8 +52,6 @@ var pkcs12 = forge.pkcs12;
       } else {
         return res.status(401).send("Incorrect Auth");
       }
-      privKey = fs.readFileSync(__dirname + "/../" + "keys/alexCA.key");
-      caCertPem = fs.readFileSync(__dirname + "/../" + "keys/alexCA.pem");
       caCert = pki.certificateFromPem(caCertPem);
       key = pki.privateKeyFromPem(privKey);
       keys = pki.rsa.generateKeyPair(2048);
