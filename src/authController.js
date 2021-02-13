@@ -6,7 +6,7 @@ var token;
 var router = express.Router();
 
 router.get('/listUsers', function (req, res) {
-   if (auth.authToken(req.header("api_key"))||auth.authCert(req)) {
+   if (auth.authToken(req.header("api_key"))) {
    } else {
      return res.status(401).send("Incorrect Auth");
    }
@@ -15,7 +15,7 @@ router.get('/listUsers', function (req, res) {
     });
  })
  router.post('/genToken', function (req, res) {
-   if (auth.authToken(req.header("api_key"))||auth.authCert(req)) {
+   if (auth.authToken(req.header("api_key"))) {
    } else {
      return res.status(401).send("Incorrect Auth");
    }

@@ -22,7 +22,7 @@ router.post('/renewClient', function (req, res) {
  });
  router.post('/signHost', function (req, res) {
 
-   if (auth.authToken(req.header("api_key"))||auth.authCert(req)) {
+   if (auth.authToken(req.header("api_key"))) {
    } else {
      return res.status(401).send("Incorrect Auth");
    }

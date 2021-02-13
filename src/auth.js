@@ -10,9 +10,5 @@ module.exports = {
            }
         }
         return false;
-    },
-    authCert: function(req) {
-        console.log(req.client)
-        return req.client.authorized
     }
   };

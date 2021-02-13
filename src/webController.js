@@ -7,7 +7,7 @@ var pki = forge.pki;
 var pkcs12 = forge.pkcs12;
 
  router.post('/sign', function (req, res) {
-    if (auth.authToken(req.header("api_key"))||auth.authCert(req)) {
+    if (auth.authToken(req.header("api_key"))) {
     } else {
       return res.status(401).send("Incorrect Auth");
     }
@@ -48,7 +48,7 @@ var pkcs12 = forge.pkcs12;
    res.end(JSON.stringify({crt:pem,key:pki.privateKeyToPem(keys.privateKey)}))
     });
     router.post('/signClient', function (req, res) {
-      if (auth.authToken(req.header("api_key"))||auth.authCert(req)) {
+      if (auth.authToken(req.header("api_key"))) {
       } else {
         return res.status(401).send("Incorrect Auth");
       }
