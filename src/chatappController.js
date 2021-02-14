@@ -46,7 +46,7 @@ module.exports = (app, server) => {
       console.log(`${parsedData.username} has joined with room ${parsedData.room}`);
       socket.join(parsedData.room);
       io.to(Array.from(socket.rooms)[1]).emit('newUser', parsedData.username);
-      return socket.emit('serverInfo', sendServerInfo());
+      return io.emit('serverInfo', sendServerInfo());
     });
     socket.on('disconnecting', () => {
       if (allClients[socket.id]) {
@@ -54,7 +54,8 @@ module.exports = (app, server) => {
         io.to(Array.from(socket.rooms)[1]).emit('delUser', allClients[socket.id].username);
         delete (allClients[socket.id]);
       }
-      return socket.emit('serverInfo', sendServerInfo());
+      socket.disconnect();
+      return io.emit('serverInfo', sendServerInfo());
     });
     socket.on('changeName', (data) => {
       const parsedData = JSON.parse(data);
@@ -67,7 +68,7 @@ module.exports = (app, server) => {
       console.log(`${parsedData.oldName} has changed their name to ${parsedData.newName}`);
       allClients[socket.id].username = parsedData.newName;
       io.to(Array.from(socket.rooms)[1]).emit('changeName', data);
-      return socket.emit('serverInfo', sendServerInfo());
+      return io.emit('serverInfo', sendServerInfo());
     });
     socket.on('changeRoom', (data) => {
       console.log(`${allClients[socket.id].username} has changed their room to ${data}`);
@@ -75,7 +76,7 @@ module.exports = (app, server) => {
       socket.leave(Array.from(socket.rooms)[1]);
       socket.join(data);
       io.to(Array.from(socket.rooms)[1]).emit('newUser', allClients[socket.id].username);
-      return socket.emit('serverInfo', sendServerInfo());
+      return io.emit('serverInfo', sendServerInfo());
     });
     socket.on('changeInfo', (data) => {
       const parsedData = JSON.parse(data);
@@ -91,7 +92,7 @@ module.exports = (app, server) => {
       socket.join(parsedData.room);
       allClients[socket.id] = parsedData;
       io.to(Array.from(socket.rooms)[1]).emit('newUser', allClients[socket.id].username);
-      return socket.emit('serverInfo', sendServerInfo());
+      return io.emit('serverInfo', sendServerInfo());
     });
   });
 };
