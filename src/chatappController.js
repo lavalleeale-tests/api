@@ -40,6 +40,7 @@ module.exports = (app, server) => {
         if (client.username === parsedData.username) {
           return socket.disconnect();
         }
+        return true;
       });
       allClients[socket.id] = parsedData;
       console.log(`${parsedData.username} has joined with room ${parsedData.room}`);
@@ -61,6 +62,7 @@ module.exports = (app, server) => {
         if (client.username === parsedData.username) {
           return socket.disconnect();
         }
+        return true;
       });
       console.log(`${parsedData.oldName} has changed their name to ${parsedData.newName}`);
       allClients[socket.id].username = parsedData.newName;
@@ -81,6 +83,7 @@ module.exports = (app, server) => {
         if (client.username === parsedData.username) {
           return socket.disconnect();
         }
+        return true;
       });
       console.log(`${allClients[socket.id].username} has changed their room to ${parsedData.room} and name to ${parsedData.username}`);
       io.to(Array.from(socket.rooms)[1]).emit('delUser', allClients[socket.id]);
