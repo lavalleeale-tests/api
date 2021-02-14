@@ -1,4 +1,5 @@
 const express = require('express');
+const compression = require('compression');
 const fs = require('fs');
 const https = require('https');
 
@@ -17,6 +18,19 @@ const apiLimiter = rateLimit({
   max: 100,
   message: 'Too many requests',
 });
+
+const shouldCompress = (req, res) => {
+  if (req.headers['x-no-compression']) {
+    return false;
+  }
+
+  // fallback to standard compression
+  return compression.filter(req, res);
+};
+
+app.use(compression({
+  filter: shouldCompress,
+}));
 
 app.use('/auth/', apiLimiter);
 app.use('/ssh/', apiLimiter);

@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "server.js",
   "dependencies": {
+    "compression": "^1.7.4",
     "express": "^4.17.1",
     "express-rate-limit": "^5.2.5",
     "node-forge": "^0.10.0",
