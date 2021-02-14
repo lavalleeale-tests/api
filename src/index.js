@@ -1,7 +1,10 @@
 const express = require('express');
 const compression = require('compression');
 const fs = require('fs');
+
 const https = require('https');
+
+const cookieParser = require('cookie-parser');
 
 const app = express();
 const privateKey = fs.readFileSync(`${__dirname}/../keys/server.key`, 'utf8');
@@ -12,6 +15,7 @@ const rateLimit = require('express-rate-limit');
 const authController = require('./authController');
 const sshController = require('./sshController');
 const webController = require('./webController');
+const taskTrackerController = require('./notesAppController');
 
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -35,6 +39,7 @@ app.use(compression({
 app.use('/auth/', apiLimiter);
 app.use('/ssh/', apiLimiter);
 app.use('/web/', apiLimiter);
+app.use(cookieParser());
 
 app.use(
   express.urlencoded({
@@ -45,6 +50,7 @@ app.use(express.json());
 app.use('/auth', authController);
 app.use('/ssh', sshController);
 app.use('/web', webController);
+app.use('/notesApp', taskTrackerController);
 require('./chatappController')(app, httpsServer);
 
 process.on('SIGINT', () => {
