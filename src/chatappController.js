@@ -23,7 +23,7 @@ module.exports = (app, server) => {
         if (data.split(' ').length < 4) {
           return io.to(socket.id).emit('update', 'Incorrect Argument Count\n');
         }
-        const userTo = Object.keys(allClients).find((key) => allClients[key].username === data.split(' ')[2]);
+        const userTo = Object.keys(allClients).find((key) => allClients[key].username.toLowerCase() === data.split(' ')[2].toLowerCase());
         if (!userTo) {
           return io.to(socket.id).emit('update', `User ${data.split(' ')[2].replace('\n', '')} not found, maybe a spelling mistake?\n`);
         }
@@ -37,7 +37,7 @@ module.exports = (app, server) => {
     socket.on('newUser', (data) => {
       const parsedData = JSON.parse(data);
       Object.values(allClients).forEach((client) => {
-        if (client.username === parsedData.username) {
+        if (client.username.toLowerCase() === parsedData.username.toLowerCase()) {
           return socket.disconnect();
         }
         return true;
@@ -59,7 +59,7 @@ module.exports = (app, server) => {
     socket.on('changeName', (data) => {
       const parsedData = JSON.parse(data);
       Object.values(allClients).forEach((client) => {
-        if (client.username === parsedData.username) {
+        if (client.username.toLowerCase() === parsedData.username.toLowerCase()) {
           return socket.disconnect();
         }
         return true;
@@ -80,7 +80,7 @@ module.exports = (app, server) => {
     socket.on('changeInfo', (data) => {
       const parsedData = JSON.parse(data);
       Object.values(allClients).forEach((client) => {
-        if (client.username === parsedData.username) {
+        if (client.username.toLowerCase() === parsedData.username.toLowerCase()) {
           return socket.disconnect();
         }
         return true;
