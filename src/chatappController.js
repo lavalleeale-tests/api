@@ -54,7 +54,6 @@ module.exports = (app, server) => {
         io.to(Array.from(socket.rooms)[1]).emit('delUser', allClients[socket.id].username);
         delete (allClients[socket.id]);
       }
-      socket.disconnect();
       return io.emit('serverInfo', sendServerInfo());
     });
     socket.on('changeName', (data) => {
