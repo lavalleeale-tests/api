@@ -16,5 +16,9 @@
   "keywords": [],
   "author": "Alex Lavallee",
   "license": "MIT",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint-config-airbnb": "^18.2.1"
+  }
 }
