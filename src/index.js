@@ -2,7 +2,7 @@ const express = require('express');
 const compression = require('compression');
 const fs = require('fs');
 
-const https = require('http');
+const https = require('https');
 
 const cookieParser = require('cookie-parser');
 
@@ -57,4 +57,4 @@ process.on('SIGINT', () => {
   httpsServer.close();
 });
 
-httpsServer.listen(80);
+httpsServer.listen(443);
