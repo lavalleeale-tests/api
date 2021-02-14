@@ -11,7 +11,13 @@ module.exports = (app, server) => {
     path: '/chatApp/socket',
   });
 
+  function sendServerInfo() {
+    const serverInfo = Object.values(allClients);
+    return JSON.stringify(serverInfo);
+  }
+
   io.on('connection', (socket) => {
+    socket.emit('serverInfo', sendServerInfo());
     socket.on('sendMessage', (data) => {
       if (data.split(' ')[1].replace('\n', '') === '/w') {
         if (data.split(' ').length < 4) {
@@ -30,24 +36,36 @@ module.exports = (app, server) => {
     });
     socket.on('newUser', (data) => {
       const parsedData = JSON.parse(data);
-      allClients[socket.id] = {
-        username: parsedData.username,
-        room: parsedData.room,
-      };
+      Object.values(allClients).forEach((client) => {
+        if (client.username === parsedData.username) {
+          return socket.disconnect();
+        }
+      });
+      allClients[socket.id] = parsedData;
       console.log(`${parsedData.username} has joined with room ${parsedData.room}`);
       socket.join(parsedData.room);
       io.to(Array.from(socket.rooms)[1]).emit('newUser', parsedData.username);
+      return socket.emit('serverInfo', sendServerInfo());
     });
     socket.on('disconnecting', () => {
-      console.log(`${allClients[socket.id].username} has left`);
-      io.to(Array.from(socket.rooms)[1]).emit('delUser', allClients[socket.id].username);
-      delete (allClients[socket.id]);
+      if (allClients[socket.id]) {
+        console.log(`${allClients[socket.id].username} has left`);
+        io.to(Array.from(socket.rooms)[1]).emit('delUser', allClients[socket.id].username);
+        delete (allClients[socket.id]);
+      }
+      return socket.emit('serverInfo', sendServerInfo());
     });
     socket.on('changeName', (data) => {
       const parsedData = JSON.parse(data);
+      Object.values(allClients).forEach((client) => {
+        if (client.username === parsedData.username) {
+          return socket.disconnect();
+        }
+      });
       console.log(`${parsedData.oldName} has changed their name to ${parsedData.newName}`);
       allClients[socket.id].username = parsedData.newName;
       io.to(Array.from(socket.rooms)[1]).emit('changeName', data);
+      return socket.emit('serverInfo', sendServerInfo());
     });
     socket.on('changeRoom', (data) => {
       console.log(`${allClients[socket.id].username} has changed their room to ${data}`);
@@ -55,15 +73,22 @@ module.exports = (app, server) => {
       socket.leave(Array.from(socket.rooms)[1]);
       socket.join(data);
       io.to(Array.from(socket.rooms)[1]).emit('newUser', allClients[socket.id].username);
+      return socket.emit('serverInfo', sendServerInfo());
     });
     socket.on('changeInfo', (data) => {
       const parsedData = JSON.parse(data);
+      Object.values(allClients).forEach((client) => {
+        if (client.username === parsedData.username) {
+          return socket.disconnect();
+        }
+      });
       console.log(`${allClients[socket.id].username} has changed their room to ${parsedData.room} and name to ${parsedData.username}`);
       io.to(Array.from(socket.rooms)[1]).emit('delUser', allClients[socket.id]);
       socket.leave(Array.from(socket.rooms)[1]);
       socket.join(parsedData.room);
       allClients[socket.id] = parsedData;
       io.to(Array.from(socket.rooms)[1]).emit('newUser', allClients[socket.id].username);
+      return socket.emit('serverInfo', sendServerInfo());
     });
   });
 };
