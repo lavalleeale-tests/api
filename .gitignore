@@ -1,6 +1,7 @@
 # Custom
 keys/
 tokens.json
+notesApp/
 # Logs
 logs
 *.log

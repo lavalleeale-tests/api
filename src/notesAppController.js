@@ -4,6 +4,7 @@ const express = require('express');
 const passwordHash = require('password-hash');
 const fs = require('fs');
 
+const router = express.Router();
 let users = JSON.parse(fs.readFileSync(`${__dirname}/../notesApp/users.json`, 'utf8'));
 
 fs.watch(`${__dirname}/../notesApp/users.json`, (event, filename) => {
@@ -11,6 +12,8 @@ fs.watch(`${__dirname}/../notesApp/users.json`, (event, filename) => {
     users = JSON.parse(fs.readFileSync(`${__dirname}/../notesApp/users.json`, 'utf8'));
   }
 });
+
+router.use('/', express.static(`${__dirname}/../notesApp/build`));
 
 function getNotes(uuid) {
   let notes = -1;
@@ -55,7 +58,6 @@ function getNote(user, id) {
   return found;
 }
 
-const router = express.Router();
 router.post('/auth', (req, res, next) => {
   if (users[req.body.username]) {
     if (passwordHash.verify(req.body.password, users[req.body.username].password)) {
@@ -97,7 +99,6 @@ router.post('/addNote', (req, res) => {
 router.delete('/deleteNote', (req, res) => {
   if (validUUID(req.cookies.uuid)) {
     const name = getName(req.cookies.uuid);
-    console.log(getNote(name, req.header('id')));
     users[name].notes.splice(getNote(name, req.header('id')), 1);
     fs.writeFileSync(`${__dirname}/../notesApp/users.json`, JSON.stringify(users));
     return res.status(200).end(JSON.stringify(users[name].notes));
