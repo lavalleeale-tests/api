@@ -3,9 +3,10 @@ const compression = require('compression');
 const fs = require('fs');
 var cors = require('cors')
 const app = express();
-app.options('/notesApp/*', cors({
+corsOptions = cors({
   origin: 'https://alextesting.ninja'
-})) // enable pre-flight request for DELETE request
+})
+app.options('/notesApp/*', cors(corsOptions))
 
 const https = require('https');
 
@@ -43,6 +44,7 @@ app.use(compression({
 app.use('/auth/', apiLimiter);
 app.use('/ssh/', apiLimiter);
 app.use('/web/', apiLimiter);
+app.use('/notesApp', cors(corsOptions));
 app.use(cookieParser());
 
 app.use(
