@@ -109,6 +109,23 @@ router.post('/addNote', (req, res) => {
   }
   return res.status(401).end();
 });
+router.put('/updateNote', (req, res) => {
+  if (validUUID(req.cookies.uuid)) {
+    let name = getName(req.cookies.uuid);
+    users[name].notes.splice(getNote(name, req.header('id')), 1);
+    if (getNote(name, req.id)===-1) {
+      return res.status(401).end();
+    }
+    users[getName(req.cookies.uuid)].notes.push({
+      id: req.id,
+      name: req.body.name,
+      content: req.body.content,
+    });
+    fs.writeFileSync(`${__dirname}/../notesApp/users.json`, JSON.stringify(users));
+    return res.status(200).end(JSON.stringify(users[getName(req.cookies.uuid)].notes));
+  }
+  return res.status(401).end();
+});
 router.delete('/deleteNote', (req, res) => {
   if (validUUID(req.cookies.uuid)) {
     const name = getName(req.cookies.uuid);
