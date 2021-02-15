@@ -4,9 +4,9 @@ const express = require('express');
 const passwordHash = require('password-hash');
 const fs = require('fs');
 var cors = require('cors')
-corsOptions = cors({
+corsOptions = {
   origin: 'https://alextesting.ninja'
-})
+}
 
 const router = express.Router();
 
