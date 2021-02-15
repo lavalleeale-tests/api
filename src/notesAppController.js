@@ -7,9 +7,10 @@ var cors = require('cors')
 corsOptions = cors({
   origin: 'https://alextesting.ninja'
 })
-router.options('*', cors(corsOptions))
 
 const router = express.Router();
+
+router.options('*', cors(corsOptions))
 let users = JSON.parse(fs.readFileSync(`${__dirname}/../notesApp/users.json`, 'utf8'));
 
 fs.watch(`${__dirname}/../notesApp/users.json`, (event, filename) => {
