@@ -8,11 +8,18 @@ const router = express.Router();
 
 let users = JSON.parse(fs.readFileSync(`${__dirname}/../notesApp/users.json`, 'utf8'));
 
+
 fs.watch(`${__dirname}/../notesApp/users.json`, (event, filename) => {
   if (filename) {
     users = JSON.parse(fs.readFileSync(`${__dirname}/../notesApp/users.json`, 'utf8'));
   }
 });
+
+Object.keys(users).forEach((user) => {
+  users[user].uuids=[]
+})
+
+fs.writeFileSync(`${__dirname}/../notesApp/users.json`, JSON.stringify(users));
 
 router.use('/', express.static(`${__dirname}/../notesApp/build`));
 
