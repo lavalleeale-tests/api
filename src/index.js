@@ -1,6 +1,10 @@
 const express = require('express');
 const compression = require('compression');
 const fs = require('fs');
+var cors = require('cors')
+app.options('/notesApp/*', cors({
+  origin: 'https://alextesting.ninja'
+})) // enable pre-flight request for DELETE request
 
 const https = require('https');
 
