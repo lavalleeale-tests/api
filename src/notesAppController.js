@@ -71,14 +71,14 @@ router.post('/auth', (req, res, next) => {
     if (passwordHash.verify(req.body.password, users[req.body.username].password)) {
       const uuid = uuidv4();
       res.cookie('uuid', uuid, {
-        maxAge: 900000,
+        maxAge: 2678400,
         httpOnly: true,
         sameSite: "strict",
         secure: true,
         domain: '.alextesting.ninja',
       });
       res.cookie('auth', true, {
-        maxAge: 900000,
+        maxAge: 2678400,
         secure: true,
         sameSite: "strict",
         domain: '.alextesting.ninja',
