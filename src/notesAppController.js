@@ -73,12 +73,14 @@ router.post('/auth', (req, res, next) => {
       res.cookie('uuid', uuid, {
         maxAge: 900000,
         httpOnly: true,
+        sameSite: "strict",
         secure: true,
         domain: '.alextesting.ninja',
       });
       res.cookie('auth', true, {
         maxAge: 900000,
         secure: true,
+        sameSite: "strict",
         domain: '.alextesting.ninja',
       });
       users[req.body.username].uuids.push(uuid);
