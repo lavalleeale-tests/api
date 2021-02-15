@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const socketio = require('socket.io');
+const express = require('express');
 
 const allClients = [];
 module.exports = (app, server) => {
