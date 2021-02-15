@@ -39,7 +39,6 @@ app.use(compression({
 app.use('/auth/', apiLimiter);
 app.use('/ssh/', apiLimiter);
 app.use('/web/', apiLimiter);
-app.use('/notesApp', cors(corsOptions));
 app.use(cookieParser());
 
 app.use(
