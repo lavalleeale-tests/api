@@ -11,6 +11,8 @@ module.exports = (app, server) => {
     path: '/chatApp/socket',
   });
 
+  app.use('/chatApp', express.static(`${__dirname}/../chatApp/build`));
+
   function sendServerInfo() {
     const serverInfo = Object.values(allClients);
     return JSON.stringify(serverInfo);
