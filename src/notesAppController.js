@@ -21,8 +21,6 @@ Object.keys(users).forEach((user) => {
 
 fs.writeFileSync(`${__dirname}/../notesApp/users.json`, JSON.stringify(users));
 
-router.use('/', express.static(`${__dirname}/../notesApp/build`));
-
 function getNotes(uuid) {
   let notes = -1;
   Object.keys(users).forEach((user) => {
@@ -131,4 +129,7 @@ router.delete('/deleteNote', (req, res) => {
   }
   return res.status(401).end();
 });
+
+router.use('/', express.static(`${__dirname}/../notesApp/build`));
+
 module.exports = router;
