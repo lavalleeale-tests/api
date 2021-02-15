@@ -1,12 +1,7 @@
 const express = require('express');
 const compression = require('compression');
 const fs = require('fs');
-var cors = require('cors')
 const app = express();
-corsOptions = cors({
-  origin: 'https://alextesting.ninja'
-})
-app.options('/notesApp/*', cors(corsOptions))
 
 const https = require('https');
 
