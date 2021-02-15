@@ -3,16 +3,9 @@ const uuidv4 = require('uuid').v4;
 const express = require('express');
 const passwordHash = require('password-hash');
 const fs = require('fs');
-var cors = require('cors')
-corsOptions = {
-  origin: 'https://alextesting.ninja',
-  preflightContinue: true,
-  credentials: true,
-}
 
 const router = express.Router();
 
-router.options('*', cors(corsOptions))
 let users = JSON.parse(fs.readFileSync(`${__dirname}/../notesApp/users.json`, 'utf8'));
 
 fs.watch(`${__dirname}/../notesApp/users.json`, (event, filename) => {
@@ -66,7 +59,7 @@ function getNote(user, id) {
   return found;
 }
 
-router.post('/auth', cors(corsOptions), (req, res, next) => {
+router.post('/auth', (req, res, next) => {
   if (users[req.body.username]) {
     if (passwordHash.verify(req.body.password, users[req.body.username].password)) {
       const uuid = uuidv4();
@@ -89,7 +82,7 @@ router.post('/auth', cors(corsOptions), (req, res, next) => {
   }
   return res.status(401).end();
 });
-router.get('/getNotes', cors(corsOptions), (req, res) => {
+router.get('/getNotes', (req, res) => {
   if (validUUID(req.cookies.uuid)) {
     return res.status(200).end(JSON.stringify(getNotes(req.cookies.uuid)));
   }
@@ -107,7 +100,7 @@ router.post('/addNote', (req, res) => {
   }
   return res.status(401).end();
 });
-router.delete('/deleteNote', cors(corsOptions), (req, res) => {
+router.delete('/deleteNote', (req, res) => {
   if (validUUID(req.cookies.uuid)) {
     const name = getName(req.cookies.uuid);
     users[name].notes.splice(getNote(name, req.header('id')), 1);
