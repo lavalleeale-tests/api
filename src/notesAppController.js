@@ -83,8 +83,9 @@ router.post('/auth', (req, res, next) => {
 });
 router.get('/getNotes', (req, res) => {
   if (validUUID(req.cookies.uuid)) {
-    res.status(200).end(JSON.stringify(getNotes(req.cookies.uuid)));
+    return res.status(200).end(JSON.stringify(getNotes(req.cookies.uuid)));
   }
+  return res.status(401).end();
 });
 router.post('/addNote', (req, res) => {
   if (validUUID(req.cookies.uuid)) {
