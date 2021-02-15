@@ -5,7 +5,9 @@ const passwordHash = require('password-hash');
 const fs = require('fs');
 var cors = require('cors')
 corsOptions = {
-  origin: 'https://alextesting.ninja'
+  origin: 'https://alextesting.ninja',
+  preflightContinue: true,
+  credentials: true,
 }
 
 const router = express.Router();
